@@ -30,7 +30,7 @@ function App() {
 
   return (
     <Container>
-      <RpDialog open={open} setOpen={setOpen} rp_info={selectedRpInfo} />
+      <RpDialog open={open} setOpen={setOpen} rp_info={selectedRpInfo} setSelectedRpInfo={setSelectedRpInfo} />
       <h1 style={{ textAlign: "center" }}>Scroll Up Devices</h1>
       <Box
         sx={{

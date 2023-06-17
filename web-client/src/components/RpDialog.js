@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FullScreenDialog({ open, setOpen, rp_info={
   name:"",
   playlist: []
-} }) {
+},setSelectedRpInfo}) {
 
   const handleClose = () => {
     setOpen(false);
@@ -43,7 +43,7 @@ export default function FullScreenDialog({ open, setOpen, rp_info={
           </Typography>
         </Toolbar>
       </AppBar>
-      <RpPage rp_info={rp_info} />
+      <RpPage rp_info={rp_info} setSelectedRpInfo={setSelectedRpInfo} />
     </Dialog>
   );
 }
