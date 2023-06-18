@@ -26,6 +26,7 @@ function App() {
     return () => {
       socket.off("get-rp-clients");
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
