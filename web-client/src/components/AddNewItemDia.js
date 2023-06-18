@@ -35,6 +35,7 @@ export default function AlertDialog({ open, setOpen, rp_info,setSelectedRpInfo }
     })
       .then((res) => res.json())
       .then(async (data) => {
+        console.log(data.data);
         await socket.emit("rp-add-playlist", {
           id: rp_info.id,
           item: {

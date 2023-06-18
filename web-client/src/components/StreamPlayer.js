@@ -7,7 +7,7 @@ export default function StreamPlayer({ rp_info }) {
 
   useEffect(() => {
     socket.on("rp-stream" + rp_info.id, (newItem) => {
-      console.log(newItem);
+    //   console.log(newItem);
       setStreamList((prev) => {
         if (prev.find((item) => item.id === newItem.id)) {
           return prev.map((item, index) => {
