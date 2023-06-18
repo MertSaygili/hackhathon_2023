@@ -12,23 +12,51 @@ function App() {
   let [playlistStorage, setPlaylistStorage] = useState([]);
   const [showed, setShowed] = useState(null);
 
+  const getData = () => new Promise((resolve, reject) => {
+    fetch("data.json")
+      .then(response => response.json())
+      .then(data => {
+        let playlist = localStorage.getItem("playlist")
+        playlist !== null ? playlist = JSON.parse(playlist) : playlist = []
+        data.forEach(itemData => {
+          if (!playlist.find(item => item.id === itemData.id)) {
+            playlist.push(itemData)
+          }
+        })
+        localStorage.setItem("playlist", JSON.stringify(playlist))
+        setPlaylistStorage(playlist)
+        resolve(playlist)
+      })
+      .catch(err => {
+        let playlist = localStorage.getItem("playlist")
+        playlist !== null ? playlist = JSON.parse(playlist) : playlist = []
+        reject(playlist)
+      }
+      )
+  })
+
   useEffect(() => {
-    socket.on("connect", () => {
+    // offline
+    getData()
+  }, []);
+
+  useEffect(() => {
+    socket.on("connect", async() => {
       // rp login
       console.log("connected");
       const name = localStorage.getItem("name") || short.generate();
-      var playlist = localStorage.getItem("playlist")
-      playlist !== null ? playlist = JSON.parse(playlist) : playlist = []
-      setPlaylistStorage(playlist)
-      socket.emit("rp-login", { name: name, mac: window.location.pathname.replace("/", ""), playlist: playlist.map(item=>{
-        return {
-          id: item.id,
-          name: item.name,
-          type: item.type,
-          // file: item.file,
-          play_time: item.play_time
-        }
-      }) })
+      const playlist = await getData()
+      socket.emit("rp-login", {
+        name: name, mac: window.location.pathname.replace("/", ""), playlist: playlist.map(item => {
+          return {
+            id: item.id,
+            name: item.name,
+            type: item.type,
+            // file: item.file,
+            play_time: item.play_time
+          }
+        })
+      })
     })
 
     socket.on("disconnect", () => {
@@ -111,7 +139,7 @@ function App() {
       flag++
       var playlist = localStorage.getItem("playlist")
       playlist !== null ? playlist = JSON.parse(playlist) : playlist = []
-      playPlayList(flag,id,playlist)
+      playPlayList(flag, id, playlist)
     })
 
     return () => {
@@ -120,7 +148,7 @@ function App() {
   }, []);
 
 
-  const sleeper = (time)=>new Promise((resolve, reject)=>{
+  const sleeper = (time) => new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve(true)
     }, time);
@@ -137,22 +165,19 @@ function App() {
     nextItem(index + 1)
   }
 
-  
-  const playPlayList = async (localFlag,id,playlist)=>{
-    console.log("id", id);
-    const elementIndex = playlistStorage.findIndex(item=>item.id === id)
-    console.log("elementIndex",elementIndex);
-    if(id){
+
+  const playPlayList = async (localFlag, id, playlist) => {
+    const elementIndex = playlistStorage.findIndex(item => item.id === id)
+    if (id) {
       playlistStorage = playlist
-      console.log("playlistStorage",playlistStorage);
     }
     let playingIndex = elementIndex != -1 ? elementIndex : 0
-    while(localFlag === flag){
+    while (localFlag === flag) {
       setShowed(playlistStorage[playingIndex])
       socket.emit("rp-stream", playlistStorage[playingIndex])
       await sleeper(playlistStorage[playingIndex].play_time * 1000)
       playingIndex++
-      if(playingIndex > playlistStorage.length - 1){
+      if (playingIndex > playlistStorage.length - 1) {
         playingIndex = 0
       }
     }
