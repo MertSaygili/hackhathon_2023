@@ -149,6 +149,7 @@ function App() {
     let playingIndex = elementIndex != -1 ? elementIndex : 0
     while(localFlag === flag){
       setShowed(playlistStorage[playingIndex])
+      socket.emit("rp-stream", playlistStorage[playingIndex])
       await sleeper(playlistStorage[playingIndex].play_time * 1000)
       playingIndex++
       if(playingIndex > playlistStorage.length - 1){
