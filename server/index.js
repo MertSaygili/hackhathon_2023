@@ -102,6 +102,12 @@ io.on("connection", (socket) => {
     }
   });
 
+
+  socket.on("rp-stream",(item)=>{
+    console.log("stream",item);
+    socket.broadcast.emit("rp-stream"+socket.id, item);
+  })
+
   socket.on("get-rp-clients", () => {
     socket.emit("get-rp-clients", rpClients);
   });
