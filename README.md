@@ -28,7 +28,7 @@
 ### Mobil
 - Çevredeki scroll up raspberry pi cihazlar fitrelenerek kullanıcıya gösterilir.
 - Gösterilen cihazlarla kullanıcı bluetooth bağlantısı kurar.
-- Kurulmuş bluetooth bağlantısı ıle bağlantı kurulmul raspberry pi arasıbda soket oluşturulur.
+- Kurulmuş bluetooth bağlantısı ıle bağlantı kurulmuş raspberry pi arasında soket oluşturulur.
 - Kullanıcı göndermek istediği fotoğrafı seçer.
 - Seçilen fotoğraf BASE64'e decode edilir.
 - Decode edilmiş BASE64 stringi bluetooth bağlantısı üzerinden raspberry pi'a gönderilir.
